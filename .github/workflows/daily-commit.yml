@@ -1,0 +1,41 @@
+# .github/workflows/daily-commit.yml
+
+name: Daily Repository Update
+
+on:
+  # Schedule the workflow to run at 08:00 UTC every day
+  schedule:
+    - cron: '0 8 * * *' # Specific time: 8 AM UTC (1:30 PM IST)
+
+  # Allow manual runs from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permission to write to the repository
+
+    steps:
+      # Step 1: Check out the repository's code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: A step with your email in its name as required
+      - name: 24f3004545@ds.study.iitm.ac.in
+        run: echo "This step is for the DevSync task requirement."
+
+      # Step 3: Create a commit
+      - name: Create daily commit
+        run: |
+          # Configure git with bot credentials
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Append the current date and time to a log file to ensure a change is always detected
+          echo "Last update: $(date)" >> update.log
+          
+          # Add the file, create a commit, and push it to the repository
+          git add update.log
+          git commit -m "Automated Daily Update"
+          git push
